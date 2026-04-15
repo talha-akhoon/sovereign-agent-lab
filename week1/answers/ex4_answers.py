@@ -7,30 +7,43 @@ Fill this in after running exercise4_mcp_client.py.
 # ── Basic results ──────────────────────────────────────────────────────────
 
 # Tool names as shown in "Discovered N tools" output.
-TOOLS_DISCOVERED = []
+TOOLS_DISCOVERED = [
+    "search_venues",
+    "get_venue_details"
+]
 
-QUERY_1_VENUE_NAME    = "FILL_ME_IN"
-QUERY_1_VENUE_ADDRESS = "FILL_ME_IN"
-QUERY_2_FINAL_ANSWER  = "FILL_ME_IN"
+QUERY_1_VENUE_NAME    = "The Haymarket Vaults"
+QUERY_1_VENUE_ADDRESS = "1 Dalry Road, Edinburgh"
+QUERY_2_FINAL_ANSWER  = "<think>\nOkay, the user is looking for a venue in Edinburgh that can hold 300 people and has vegan options. I first tried using the search_venues function with min_capacity set to 300 and requires_vegan as true, but there was a validation error. I realized the parameters needed to be inside the \"input\" object, so I adjusted the call. The response came back with zero matches. Hmm, that means there are no venues meeting both criteria. Maybe the capacity is too high, or there aren't enough vegan options. Let me check if there are any venues with vegan options even if the capacity is slightly lower. Alternatively, maybe the user can consider a higher capacity if needed. I should inform them that no venues fit both requirements and suggest adjusting the criteria.\n</think>\n\nIt seems there are no Edinburgh venues currently available that can accommodate 300 guests *and* offer vegan options. Would you like me to:\n\n1. Search for venues with vegan options but lower capacity (e.g., 250+ guests)?\n2. Look for venues with 300+ capacity but without vegan menus?\n3. Suggest alternative solutions (e.g., combining multiple venues)?\n\nLet me know how you'd like to proceed!"
 
 # ── The experiment ─────────────────────────────────────────────────────────
 # Required: modify venue_server.py, rerun, revert.
 
-EX4_EXPERIMENT_DONE = None   # True or False
+EX4_EXPERIMENT_DONE = True   # True or False
 
 # What changed, and which files did or didn't need updating? Min 30 words.
 EX4_EXPERIMENT_RESULT = """
-FILL ME IN
-"""
+After setting the status of The Albanach to full, the first query only returned
+The Haymarket Vaults instead of two matches. The agent no longer needed a
+follow-up `get_venue_details` call because the search result already left only
+one valid venue. The second query did not materially change: it still found no
+venue for 300 guests with vegan options. Only the MCP server data changed; the
+client code and prompt logic did not need updating.
+I only updated mcp_venue_server.py because that's the only file that the agent and Rasa action both use."""
 
 # ── MCP vs hardcoded ───────────────────────────────────────────────────────
 
 LINES_OF_TOOL_CODE_EX2 = 0   # count in exercise2_langgraph.py
-LINES_OF_TOOL_CODE_EX4 = 0   # count in exercise4_mcp_client.py
+LINES_OF_TOOL_CODE_EX4 = 49   # count in exercise4_mcp_client.py
 
 # What does MCP buy you beyond "the tools are in a separate file"? Min 30 words.
 MCP_VALUE_PROPOSITION = """
-FILL ME IN
+MCP gives you a shared tool interface, not just cleaner file organization. The
+agent does not need hardcoded knowledge of each tool, because it can discover
+tool names and schemas from the server at runtime. That means multiple clients,
+like LangGraph and Rasa, can reuse the same capabilities and data source. It
+also makes maintenance easier, because changing the server updates behaviour for
+every client without rewriting each agent separately.
 """
 
 # ── PyNanoClaw architecture — SPECULATION QUESTION ─────────────────────────
@@ -70,11 +83,14 @@ FILL ME IN
 #     ambiguous task.
 
 WEEK_5_ARCHITECTURE = """
-- FILL ME IN
-- FILL ME IN
-- FILL ME IN
-- FILL ME IN
-- FILL ME IN
+- The Planner is a stronger reasoning model that turns a messy user request into ordered subgoals, and it lives in the autonomous-loop half upstream of the executor.
+- The Executor grows out of `sovereign_agent/agents/research_agent.py`, carries out the planner's subgoals with tools, and lives in the autonomous-loop half.
+- The Structured Agent grows out of `exercise3_rasa/` and handles the pub-manager conversation with explicit flows and deterministic business-rule checks.
+- The Shared MCP Tool Server grows out of `sovereign_agent/tools/mcp_venue_server.py` and provides common capabilities like venue lookup, web search, and calendar access in the shared layer.
+- The Handoff Bridge lives between the two halves and passes control from the loop to the structured agent for human conversations, then back when research or follow-up actions are needed.
+- The Persistent Memory Store lives in the shared layer and keeps files, notes, and long-term state so PyNanoClaw can remember decisions across runs.
+- The Vector Store lives alongside memory and supports RAG for the structured agent, so it can answer grounded questions that are not hardcoded in `flows.yml`.
+- The Observability layer lives across the whole system and records traces, tool calls, costs, and failures so the hybrid agent can be debugged and audited.
 """
 
 # ── The guiding question ───────────────────────────────────────────────────
@@ -82,5 +98,13 @@ WEEK_5_ARCHITECTURE = """
 # Must reference specific things you observed in your runs. Min 60 words.
 
 GUIDING_QUESTION_ANSWER = """
-FILL ME IN
+The LangGraph agent is the better choice for the research side because in
+Exercise 2 it handled open-ended tasks by choosing its own tool sequence. In my
+run, it checked venues, calculated catering, checked weather, and generated a
+flyer without a fixed script. It also handled uncertainty reasonably well, such
+as admitting that no 300-person venue fit the requirements. The Rasa CALM agent
+is the better choice for the phone call side because in Exercise 3 it followed a
+clear confirmation flow, collected the booking details in order, and escalated
+when the deposit was too high. Swapping them feels wrong because the call needs
+control and predictability, while the research task needs flexible tool use.
 """

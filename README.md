@@ -1,4 +1,5 @@
 # Edinburgh Agent — Week 1 Assignment
+
 **AI Performance Engineering · Module 1 · Nebius Academy**
 
 ---
@@ -60,6 +61,7 @@ The guiding question for this week:
 ## The two halves of PyNanoClaw you will build this week
 
 ### The autonomous loop (`sovereign_agent/`)
+
 A LangGraph agent that reasons and acts autonomously. It receives a task,
 decides its own sequence of steps, calls tools, handles failures, and returns
 a result — without human guidance at each turn. This is the right tool for
@@ -68,6 +70,7 @@ this becomes the half that handles the research: searching venues, checking
 weather, estimating costs.
 
 ### The structured agent (`exercise3_rasa/`)
+
 A Rasa Pro CALM agent that handles structured interactions with real people.
 Its behaviour is defined as explicit flows with deterministic business rules
 enforced in Python. This is the right tool for high-stakes conversations where
@@ -101,6 +104,7 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 ```
 
 Restart your terminal, then verify:
+
 ```bash
 uv --version
 ```
@@ -112,10 +116,12 @@ uv --version
 remember anything.
 
 **Mac:** already installed. **Linux:** already installed. **Windows:** run one of:
+
 ```bash
 winget install GnuWin32.Make   # Windows Package Manager
 choco install make             # Chocolatey
 ```
+
 Or use Git Bash, which includes `make`.
 
 ---
@@ -172,7 +178,7 @@ without losing your own work.
 
 **Step 1 — Fork on GitHub**
 
-Go to https://github.com/sovereignagents/sovereign-agent-lab and click
+Go to [https://github.com/sovereignagents/sovereign-agent-lab](https://github.com/sovereignagents/sovereign-agent-lab) and click
 **Fork** (top right). Accept all defaults. This creates your own copy at
 `github.com/YOUR-USERNAME/sovereign-agent-lab`.
 
@@ -249,13 +255,13 @@ Developer Edition licence.
 
 #### Get your free licence (2 minutes)
 
-1. Go to **https://rasa.com/rasa-pro-developer-edition-license-key-request**
+1. Go to **[https://rasa.com/rasa-pro-developer-edition-license-key-request](https://rasa.com/rasa-pro-developer-edition-license-key-request)**
 2. Enter your email address and accept the licence terms
 3. Rasa will email you a licence key — check your inbox and spam folder
 4. Open your `.env` file and paste the key:
-   ```
+  ```
    RASA_PRO_LICENSE=the-long-key-rasa-emailed-you
-   ```
+  ```
 
 The Developer Edition is completely free and allows up to 1,000 conversations
 per month running locally. No credit card required.
@@ -272,6 +278,7 @@ uv will download Python 3.10 if needed and install Rasa Pro into
 `exercise3_rasa/.venv/`. This takes 3–5 minutes the first time.
 
 Verify it worked:
+
 ```bash
 cd exercise3_rasa && uv run rasa --version
 ```
@@ -345,6 +352,7 @@ half of PyNanoClaw in the final assignment.
 Requires **two terminals** open at the same time.
 
 **First time only — compile the CALM model:**
+
 ```bash
 make ex3-train
 ```
@@ -405,11 +413,13 @@ Week 1 lays both foundations. Week 2's session adds real tools and
 deepens MCP. The final assignment (releases 2026-04-18) merges everything
 into PyNanoClaw.
 
-| Phase | What lands |
-|------|------------|
-| **Week 1 (now)** | Autonomous loop + venue tools; CALM confirmation flow + business rules; shared MCP server. Both halves exist, neither knows about the other yet. |
-| **Week 2 session** | Real web search, file operations, deeper MCP. Both halves learn to pull tools from the same server. No separate homework. |
+
+| Phase                | What lands                                                                                                                                                                                   |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Week 1 (now)**     | Autonomous loop + venue tools; CALM confirmation flow + business rules; shared MCP server. Both halves exist, neither knows about the other yet.                                             |
+| **Week 2 session**   | Real web search, file operations, deeper MCP. Both halves learn to pull tools from the same server. No separate homework.                                                                    |
 | **Final assignment** | PyNanoClaw: planner/executor split, memory (filesystem + RAG), handoff bridge between the two halves, observability, optional voice pipeline. You apply it to a scenario from your own work. |
+
 
 By the end of the module PyNanoClaw is production-grade and connected
 through a shared MCP tool layer. You then spend the final session adapting
@@ -422,7 +432,7 @@ whatever your job actually needs automated.
 
 **Open a GitHub issue — this is the right place for all questions and problems.**
 
-👉 **https://github.com/sovereignagents/sovereign-agent-lab/issues**
+👉 **[https://github.com/sovereignagents/sovereign-agent-lab/issues](https://github.com/sovereignagents/sovereign-agent-lab/issues)**
 
 Click **New issue**, describe what you were trying to do, what command you ran,
 and paste the full error output. Using issues keeps everything visible to the
@@ -446,27 +456,29 @@ For anything that is genuinely private (grade queries, personal circumstances), 
 
 ## Troubleshooting
 
-**`make: command not found`**
+`**make: command not found`**
 Install make — see the Windows note in the Tools section above.
 
-**`uv: command not found`**
+`**uv: command not found`**
 Restart your terminal. If that fails: `source ~/.zshrc` (Mac) or
 `source ~/.bashrc` (Linux).
 
-**`No Python 3.14 found`**
+`**No Python 3.14 found**`
+
 ```bash
 uv python install 3.14 && make install
 ```
 
-**`No Python 3.10 found`** (Rasa setup)
+`**No Python 3.10 found**` (Rasa setup)
+
 ```bash
 uv python install 3.10 && make install-rasa
 ```
 
-**`.env still has the placeholder key`**
+`**.env still has the placeholder key**`
 Open `.env` and replace the placeholder with your actual key. No quotes.
 
-**`ModuleNotFoundError: No module named 'sovereign_agent'`**
+`**ModuleNotFoundError: No module named 'sovereign_agent'**`
 Run `make install` from the project root (where the `Makefile` is).
 
 **"No tool calls were made" in Exercise 2 or 4**
@@ -493,6 +505,7 @@ Check `.env` has `RASA_PRO_LICENSE=your-key` with no quotes and no spaces.
 
 **Any `make` command gives an unclear error**
 Run the underlying command directly for the full stack trace:
+
 ```bash
 uv run python week1/exercise1_context.py   # instead of make ex1
 cd exercise3_rasa && uv run rasa train     # instead of make ex3-train
@@ -529,12 +542,13 @@ London time**). Commits on `main` after that timestamp are not graded.
 Feature branches are not graded.
 
 The grader checks:
+
 - `week1/outputs/*.json` — proof you ran the exercises
 - `week1/answers/*.py` — your filled-in answers
 - `sovereign_agent/tools/venue_tools.py` — the flyer tool returns a valid
-  success dict (either live-provider mode or placeholder fallback)
+success dict (either live-provider mode or placeholder fallback)
 - `exercise3_rasa/actions/actions.py` — your Task B cutoff guard is
-  uncommented
+uncommented
 
 Run `make check-submit` before pushing — it tells you exactly what is
 missing. See `GRADING_OVERVIEW.md` for the full 30/40/30 point breakdown
